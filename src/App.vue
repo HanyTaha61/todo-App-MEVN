@@ -1,8 +1,8 @@
 <template>
-<v-container>
-  <navBar/>
-<RouterView />
-</v-container>
+  <v-container>
+    <navBar />
+    <RouterView />
+  </v-container>
 </template>
 
 <script>
