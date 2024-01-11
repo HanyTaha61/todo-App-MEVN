@@ -1,7 +1,9 @@
 <template>
   <v-container>
     <navBar />
+    <!-- <test/> -->
     <RouterView />
+    <!-- <todo2 /> -->
   </v-container>
 </template>
 
@@ -10,9 +12,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import navBar from '../src/components/navbar.vue'
 
 export default{
-  components:{
-    navBar
-  },
+  components:{ navBar },
   data(){
     return{
       names: []
