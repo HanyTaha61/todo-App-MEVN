@@ -6,8 +6,7 @@ const cors                      = require('cors')
 const {connectToDB, getDB}      = require('./db')
 
 // setup body-parser
-const bodyParser                = require('body-parser');
-const urlEncodedParser          = bodyParser.urlencoded({ extended: false });
+require('body-parser');
 
 // use request.body
 app.use(express.json())

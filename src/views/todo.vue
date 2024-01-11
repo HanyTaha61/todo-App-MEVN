@@ -1,24 +1,26 @@
 <template>
-  <v-sheet width="400" class="mx-auto">
-    <v-form ref="form">
-      <v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
-      <v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
-      <v-text-field v-model="responsible" :counter="15" :rules="responsibleRules" label="Responsible"
-        required></v-text-field>
-      <v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
-        required></v-text-field>
+  <v-sheet  class="">
+    <v-form ref="form" class="mb-5 border pa-2">
+      <v-row>
+        <v-col>
+          
+          <v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
+          <v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
+        </v-col>
+          <v-col>
+          <v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
+          required></v-text-field>
       <v-select v-model="priority" :items="['Low', 'Medium', 'High']" :rules="[v => !!v || 'Priority is required']"
         label="Priority" required />
+        
+      </v-col>
+    </v-row>
+        <v-btn color="success" class="mt-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
 
-      <div class="d-flex flex-column">
-        <v-btn color="success" class="mt-4 w-50" block @click="validate">
-          Validate & Submit
-        </v-btn>
-      </div>
     </v-form>
     <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3" hover>
-      <div class="bordered-div" :style="{ borderRight: '15px solid #f00' }">
+      <div :style="{ borderRight: '15px solid #f00' }">
 
         <v-card-item>
           <v-card-title>
@@ -29,9 +31,6 @@
           </v-card-subtitle>
           <v-card-subtitle>
             priority: {{ todo.priority }}
-          </v-card-subtitle>
-          <v-card-subtitle>
-            <strong>Responsible: {{ todo.responsible }}</strong>
           </v-card-subtitle>
         </v-card-item>
 
@@ -51,7 +50,6 @@ export default {
     todos: [],
     title: '',
     duration: null,
-    responsible: '',
     description: '',
     newTodo: {},
     titleRules: [
@@ -59,11 +57,7 @@ export default {
       v => (v && v.length <= 25) || 'title must be less than 25 characters',
       v => (v && v.length >= 4) || 'title must be more than 4 characters',
     ],
-    responsibleRules: [
-      v => !!v || 'responsible is required',
-      v => (v && v.length <= 15) || `responsible must be less than 15 characters`,
-      v => (v && v.length >= 4) || 'responsible must be more than 4 characters',
-    ],
+    
     descriptionRules: [
       v => !!v || 'Description is required',
       v => (v && v.length <= 50) || `Description must be less than 50 characters`,
@@ -96,7 +90,6 @@ export default {
         title: this.title,
         duration: this.duration,
         priority: this.priority,
-        responsible: this.responsible,
         description: this.description
       })
       this.newTodo = data

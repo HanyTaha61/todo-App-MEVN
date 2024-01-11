@@ -1,9 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid class="">
     <navBar />
-    <!-- <test/> -->
     <RouterView />
-    <!-- <todo2 /> -->
   </v-container>
 </template>
 

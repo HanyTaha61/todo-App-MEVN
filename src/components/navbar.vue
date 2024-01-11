@@ -1,5 +1,5 @@
 <template>
-      <v-row justify="space-around" style="min-width: 500px;" no-gutters class="bg-dark border my-5 pa-5">
+      <v-row justify="space-around" style="min-width: 700px;" no-gutters class="bg-dark border my-5 pa-5">
           <router-link
           class="text-3 px-3 rounded"
           v-for="link in links"
