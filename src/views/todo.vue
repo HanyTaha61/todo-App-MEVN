@@ -20,8 +20,7 @@
     </v-form>
     <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3" hover>
-      <div :style="{ borderRight: '15px solid #f00' }">
-
+      <div :class="`priority-${todo.priority}`">
         <v-card-item>
           <v-card-title>
             {{ todo.title }}
@@ -33,7 +32,6 @@
             priority: {{ todo.priority }}
           </v-card-subtitle>
         </v-card-item>
-
         <v-card-text>
           {{ todo.description }}
         </v-card-text>
@@ -103,16 +101,16 @@ export default {
   outline: none;
 }
 
-.priority-low {
-  border-right: 10px solid #f00
+.priority-Low {
+  border-right: 15px solid #ffff00
 }
 
-.priority-medium {
-  border-right: 10px solid orange
+.priority-Medium {
+  border-right: 15px solid orange
 }
 
-.priority-high {
-  border-right: 10px solid limegreen
+.priority-High {
+  border-right: 15px solid #f00
 }
 
 .h-fit {

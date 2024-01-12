@@ -1,9 +1,10 @@
+require('dotenv').config()
 const { MongoClient } = require('mongodb')
 let  dbConnection
 
 module.exports = {
     connectToDB:(cb)=>{
-        MongoClient.connect("mongodb://0.0.0.0:27017/Users")
+        MongoClient.connect(process.env.URI)
         .then(client =>{
             dbConnection = client.db()
             return cb()

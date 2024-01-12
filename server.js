@@ -38,10 +38,10 @@ app.get('/', (req,res)=>{
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 
 })
 
-app.get('/admins', (req,res)=>{
+app.get('/users', (req,res)=>{
     const all_admins = []
     
-    db.collection('admins').find()// if sort is needed, use .sort({name: 1})
+    db.collection('users').find()// if sort is needed, use .sort({name: 1})
     .forEach(user => {all_admins.push(user)})
     .then(()=>{res.send({all_admins})})    
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 
@@ -70,9 +70,9 @@ app.post('/',(req,res)=>{
     })
 })
 
-app.post('/admins',(req,res)=>{
+app.post('/users',(req,res)=>{
     const new_admin = req.body
-    db.collection('admins')
+    db.collection('users')
     .insertOne(new_admin)
     .then(result=>{
         res.status(201).json(result)
