@@ -38,10 +38,10 @@ app.get('/', (req,res)=>{
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 
 })
 
-app.get('/users', (req,res)=>{
+app.get('/admins', (req,res)=>{
     const all_admins = []
     
-    db.collection('users').find()// if sort is needed, use .sort({name: 1})
+    db.collection('admins').find()// if sort is needed, use .sort({name: 1})
     .forEach(user => {all_admins.push(user)})
     .then(()=>{res.send({all_admins})})    
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 

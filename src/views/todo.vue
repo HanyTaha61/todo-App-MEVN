@@ -20,8 +20,9 @@
     </v-form>
     <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3" hover>
-      <div :class="`priority-${todo.priority}`">
-        <v-card-item>
+      <div class="parent" :class="`priority-${todo.priority.toLowerCase()}`">
+            <v-btn class="delete-todo bg-error">Delete</v-btn>
+          <v-card-item>
           <v-card-title>
             {{ todo.title }}
           </v-card-title>
@@ -97,24 +98,56 @@ export default {
 }
 </script>
 <style>
-.outline-none {
-  outline: none;
+.priority-low {
+  border-right: 15px solid #ffdd00;
+  background-color: rgba(255, 221, 0,0.1) !important;
 }
 
-.priority-Low {
-  border-right: 15px solid #ffff00
+.priority-medium {
+  border-right: 15px solid #ffa500;
+  background-color: rgba(255, 136, 0, 0.1) !important;
 }
 
-.priority-Medium {
-  border-right: 15px solid orange
+.priority-high {
+  border-right: 15px solid #e80303;
+  background-color: rgba(232, 3, 3,0.1) !important;
 }
 
-.priority-High {
-  border-right: 15px solid #f00
+.parent {
+  position: relative;
+
+}
+/* 
+::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: rgba(0,0,0,0.1);
+  transition: 0.1s ease-in-out;
 }
 
-.h-fit {
-  height: fit-content !important;
+.parent:hover ::after {
+  height: 50%;
+  
+} */
+.parent .delete-todo{
+  position: absolute;
+  z-index: 2;
+  visibility: hidden;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  /* left: 50%; */
+  bottom: 0;
+}
+
+.parent:hover .delete-todo{
+  visibility: visible;
+  bottom: 10%;
 }
 
 .w-fit {
