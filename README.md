@@ -27,3 +27,17 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### run backend server for Development
+
+```sh
+node server
+```
+
+
+
+### PORT number
+
+```sh
+5200
+```
