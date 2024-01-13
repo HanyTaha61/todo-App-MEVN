@@ -1,11 +1,12 @@
 <template>
   <v-container class="">
-    <form class="d-flex mb-4" method="post" action="/admins">
-      <input type="text" placeholder="username" class="border pa-1" v-model="add_data.name">
-      <input type="email" placeholder="email" class="border mx-1 pa-1" v-model="add_data.email">
-      <input type="number" placeholder="age" class="border mx-1 pa-1" v-model="add_data.age">
-      <a href="/admins"><v-btn color="green" @click="add_admin">add admin</v-btn></a>
-    </form>
+    <v-form ref="form" class="d-flex mb-4" method="post" action="/admins">
+      <v-text-field type="text" counter="25" :rules="nameRules" placeholder="username" class="pa-1" v-model="add_data.name" />
+      <v-text-field type="email" placeholder="email" :rules="emailRules" class="mx-1 pa-1" v-model="add_data.email" />
+      <v-text-field type="number" :rules="ageRules" placeholder="age" class="mx-1 pa-1" v-model="add_data.age" />
+      <!-- <a href="/admins"><v-btn color="green" @click="add_admin">add admin</v-btn></a> -->
+      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
+    </v-form>
     <hr>
     <h1 class="text-center">admins' data</h1>
     <hr>
@@ -56,7 +57,20 @@ export default {
         name: '',
         email: '',
         age: null
-      }
+      },
+      nameRules: [
+      v => !!v || 'name is required',
+      v => (v && v.length <= 25) || 'name must be less than 25 characters',
+      v => (v && v.length >= 4) || 'name must be more than 4 characters',
+    ],
+      emailRules: [
+      v => !!v || 'email is required'
+    ],
+    ageRules: [
+      v => !!v || 'age is required',
+      v => (v && v >= 18) || 'age must be more than 18 years',
+      v => (v && v <= 60) || 'age must be less than 60 years',
+    ],
     }
   },
   mounted() {
@@ -67,6 +81,14 @@ export default {
       .catch(err => console.log(err.message + '-----'))
   },
   methods: {
+    async validate() {
+      const { valid } = await this.$refs.form.validate()
+
+      if (valid) {
+        this.add_admin()
+        location.reload()
+      }
+    },
    async add_admin() {
     try {
       const { data } = await axios.post('http://localhost:5200/admins', {
@@ -75,6 +97,7 @@ export default {
       age: this.add_data.age
      })
      this.newAdmins = data
+     location.reload()
     } catch (error) {
       console.log(`------- ${error} -------`);
     }

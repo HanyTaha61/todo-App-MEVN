@@ -32,7 +32,7 @@ connectToDB( err=>{
 app.get('/', (req,res)=>{
     const all_todos = []
     
-    db.collection('todos').find().sort({title: 1})// if sort is needed, use .sort({name: 1})
+    db.collection('todos').find()// if sort is needed, use .sort({name: 1})
     .forEach(todo => {all_todos.push(todo)})
     .then(()=>{res.send({all_todos})})    
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 
@@ -70,9 +70,9 @@ app.post('/',(req,res)=>{
     })
 })
 
-app.post('/users',(req,res)=>{
+app.post('/admins',(req,res)=>{
     const new_admin = req.body
-    db.collection('users')
+    db.collection('admins')
     .insertOne(new_admin)
     .then(result=>{
         res.status(201).json(result)
