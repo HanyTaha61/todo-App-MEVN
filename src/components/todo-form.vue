@@ -117,7 +117,7 @@ body {
 }
 
 .parent {
-  transition: 0.15s;
+  transition: 0.25s;
   bottom: -60px;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -126,6 +126,10 @@ body {
 
 .main:hover .parent{
   bottom: 30px;
+}
+
+.main:hover{
+  background-color: rgba(0,0,0,0.4) !important;
 }
 
 .pos-a{
