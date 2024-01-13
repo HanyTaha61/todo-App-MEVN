@@ -22,19 +22,24 @@
             <th class="text-center text-h6">
               <strong>price</strong>
             </th>
+            <th class="text-center text-h6">
+              <strong></strong>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="table-row"
-          :class="{overlay: show}"
-          v-for="item in books" :key="item.title"
-          
-          
-          >
-
+          <tr class="table-row pos-r" v-for="item in books" :key="item.title">
             <td class="text-center">{{ item.title }}</td>
             <td class="text-center">{{ item.author }}</td>
             <td class="text-center">{{ item.price }}</td>
+            <td class="text-center">
+              <v-btn class="icon-delete pos-a d-none text-error ">
+                <v-icon icon="$delete"></v-icon>
+              </v-btn>
+              <v-btn class="icon-edit pos-a d-none text-primary ">
+                <v-icon icon="$edit"></v-icon>
+              </v-btn>
+            </td>
           </tr>
         </tbody>
       </v-table>
@@ -111,5 +116,25 @@ export default {
 }
 .overlay{
   background-color: aliceblue !important;
+}
+.table-row:hover {
+  background-color: black;
+  opacity: 0.75;
+  color: aliceblue;
+}
+
+.table-row td .icon-delete,.table-row td .icon-edit {
+  bottom: 8px;
+}
+
+.table-row td .icon-delete{
+  right: 5px;
+}
+.table-row td .icon-edit{
+  right: 75px;
+}
+
+.table-row:hover .icon-delete, .table-row:hover .icon-edit{
+  display: block !important;
 }
 </style>

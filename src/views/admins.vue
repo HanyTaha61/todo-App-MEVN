@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-row pos-r" :class="{ overlay: show }" v-for="item in names" :key="item.name">
+          <tr class="table-row pos-r" v-for="item in names" :key="item.name">
             <td class="text-center">{{ item.name }}</td>
             <td class="text-center">{{ item.email }}</td>
             <td class="text-center">{{ item.age }}</td>
@@ -57,7 +57,6 @@ export default {
   components: {},
   data() {
     return {
-      show: false,
       newAdmins: {},
       names: [],
       add_data: {

@@ -50,7 +50,7 @@ app.get('/admins', (req,res)=>{
 app.get('/books', (req,res)=>{
     const all_books = []
     
-    db.collection('books').find().sort({title: 1})
+    db.collection('books').find()
     .forEach(book => {all_books.push(book)})
     .then(()=>{res.send({all_books})})    
     .catch((err)=>{console.log(`-----Error----- ${err}`);}) 
