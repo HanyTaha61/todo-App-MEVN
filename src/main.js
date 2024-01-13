@@ -12,7 +12,7 @@ import * as directives from 'vuetify/directives'
 import 'vuetify/dist/vuetify.css';
 
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
-import { mdiAccount, mdiDelete } from '@mdi/js'
+import { mdiPencil, mdiDelete } from '@mdi/js'
 
 const vuetify = createVuetify({
   components,
@@ -21,7 +21,7 @@ const vuetify = createVuetify({
     defaultSet: 'mdi',
     aliases: {
       ...aliases,
-      account: mdiAccount,
+      edit: mdiPencil,
       delete: mdiDelete
     },
     sets: {

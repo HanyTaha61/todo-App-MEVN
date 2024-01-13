@@ -18,8 +18,8 @@
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3 w-75" hover>
       <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
         <div class="parent pos-a w-fit">
-          <v-btn class="mark-read bg-success">done</v-btn>
-          <v-btn class="delete-todo mx-2 bg-error">Delete</v-btn>
+          <v-btn class="mark-read bg-success">edit<v-icon icon="$edit"></v-icon></v-btn>
+          <v-btn class="delete-todo mx-2 bg-error">delete<v-icon icon="$delete"></v-icon></v-btn>
         </div>
         <v-card-item>
           <v-card-title>
