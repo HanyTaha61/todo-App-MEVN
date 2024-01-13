@@ -4,7 +4,7 @@
       <v-text-field :rules="nameRules" counter="25" type="text" placeholder="book title" class="pa-1" v-model="add_data.title" />
       <v-text-field :rules="authorRules" counter="25" type="text" placeholder="author name" class="mx-1 pa-1" v-model="add_data.author" />
       <v-text-field :rules="priceRules" type="number" placeholder="book price" class="mx-1 pa-1" v-model="add_data.price" />
-      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
+      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add book</v-btn>
     </v-form>
     <hr>
     <h1 class="text-center">books' data</h1>

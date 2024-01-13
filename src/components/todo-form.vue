@@ -12,7 +12,7 @@
             label="Priority" required />
         </v-col>
       </v-row>
-      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
+      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add todo</v-btn>
     </v-form>
     <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3 w-75" hover>
