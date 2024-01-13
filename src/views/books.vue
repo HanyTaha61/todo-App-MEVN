@@ -1,11 +1,11 @@
 <template>
   <v-container class="border">
-    <form class="d-flex mb-4" method="post" action="/users">
-      <input type="text" placeholder="book title" class="border pa-1" v-model="add_data.title">
-      <input type="text" placeholder="author name" class="border mx-1 pa-1" v-model="add_data.author">
-      <input type="number" placeholder="book price" class="border mx-1 pa-1" v-model="add_data.price">
-      <a href="/books"><v-btn color="green" @click="add_book">add book</v-btn></a>
-    </form>
+    <v-form ref="form" class="d-flex mb-4" method="post" action="/books">
+      <v-text-field :rules="nameRules" counter="25" type="text" placeholder="book title" class="pa-1" v-model="add_data.title" />
+      <v-text-field :rules="authorRules" counter="25" type="text" placeholder="author name" class="mx-1 pa-1" v-model="add_data.author" />
+      <v-text-field :rules="priceRules" type="number" placeholder="book price" class="mx-1 pa-1" v-model="add_data.price" />
+      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
+    </v-form>
     <hr>
     <h1 class="text-center">books' data</h1>
     <hr>
@@ -56,7 +56,21 @@ export default {
         title: '',
         author: '',
         price: null
-      }
+      },
+      nameRules: [
+      v => !!v || 'book title is required',
+      v => (v && v.length <= 25) || 'book title must be less than 25 characters',
+      v => (v && v.length >= 4) || 'book title must be more than 4 characters',
+    ],
+    authorRules: [
+      v => !!v || 'author name is required',
+      v => (v && v.length <= 25) || 'author name must be less than 25 characters',
+      v => (v && v.length >= 4) || 'author name must be more than 4 characters',
+    ],
+    priceRules: [
+      v => !!v || 'book price is required',
+      v => (v && v >= 1) || 'book price must be more than 1 USD',
+    ]
     }
   },
   mounted() {
@@ -67,6 +81,14 @@ export default {
       .catch(err => console.log(err.message + '-----'))
   },
   methods: {
+    async validate() {
+      const { valid } = await this.$refs.form.validate()
+
+      if (valid) {
+        this.add_book()
+        location.reload()
+      }
+    },
    async add_book() {
     try {
       const { data } = await axios.post('http://localhost:5200/books', {

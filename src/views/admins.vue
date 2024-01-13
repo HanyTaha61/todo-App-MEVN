@@ -4,7 +4,6 @@
       <v-text-field type="text" counter="25" :rules="nameRules" placeholder="username" class="pa-1" v-model="add_data.name" />
       <v-text-field type="email" placeholder="email" :rules="emailRules" class="mx-1 pa-1" v-model="add_data.email" />
       <v-text-field type="number" :rules="ageRules" placeholder="age" class="mx-1 pa-1" v-model="add_data.age" />
-      <!-- <a href="/admins"><v-btn color="green" @click="add_admin">add admin</v-btn></a> -->
       <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">Validate & Submit</v-btn>
     </v-form>
     <hr>
