@@ -8,6 +8,7 @@
     </v-form>
     <hr>
     <h1 class="text-center">admins' data</h1>
+    
     <hr>
     <div class="table">
       <v-table>
@@ -19,22 +20,23 @@
             <th class="text-center text-h6">
               <strong>email</strong>
             </th>
+            
             <th class="text-center text-h6">
               <strong>age</strong>
+            </th>
+            <th class="text-center text-h6">
+              <strong></strong>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="table-row"
+          <tr class="table-row pos-r"
           :class="{overlay: show}"
-          v-for="item in names" :key="item.name"
-          
-          
-          >
-
-            <td class="text-center">{{ item.name }}</td>
-            <td class="text-center">{{ item.email }}</td>
-            <td class="text-center">{{ item.age }}</td>
+          v-for="item in names" :key="item.name">
+          <td class="text-center">{{ item.name }}</td>
+          <td class="text-center">{{ item.email }}</td>
+          <td class="text-center">{{ item.age }}</td>
+          <td class="text-center"><v-btn class="icon-delete pos-a d-none text-error " ><v-icon icon="$delete"></v-icon></v-btn></td>
           </tr>
         </tbody>
       </v-table>
@@ -111,5 +113,17 @@ export default {
 }
 .overlay{
   background-color: aliceblue !important;
+}
+.table-row:hover{
+  background-color: black;
+  opacity: 0.75;
+  color: aliceblue;
+}
+.table-row td .icon-delete{
+  bottom: 8px;
+}
+
+.table-row:hover .icon-delete{
+  display: block !important;
 }
 </style>
