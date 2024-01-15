@@ -15,37 +15,39 @@
       <v-table>
         <thead class="overlay border">
           <tr>
-            <th class="text-center text-h6">
+            <th class="text-left text-h6">
               <strong>title</strong>
             </th>
-            <th class="text-center text-h6">
+            <th class="text-left text-h6">
               <strong>author</strong>
             </th>
-            <th class="text-center text-h6">
+            <th class="text-left text-h6">
               <strong>genres</strong>
             </th>
-            <th class="text-center text-h6">
+            <th class="text-left text-h6 border">
               <strong>price</strong>
-            </th>
-            <th class="text-center text-h6">
-              <strong></strong>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="table-row pos-r" v-for="item in books" :key="item.title">
-            <td class="text-center">{{ item.title }}</td>
-            <td class="text-center">{{ item.author }}</td>
-            <td class="text-center"><ul><li class="text-center" v-for="(genre,i) in item.genres" :key="i">{{ genre }}</li></ul></td>
-            <td class="text-center">{{ item.price }}</td>
-            <td class="text-center">
-              <v-btn @click="delete_book(item._id)" class="icon-delete pos-a d-none text-error ">
+          <tr class="table-row pos-r" v-for="(item,i) in books" :key="i">
+            <td class="text-left">{{ item.title }}</td>
+            <td class="text-left">{{ item.author }}</td>
+            <td class="text-left"><ul><li class="text-left" v-for="(genre,i) in item.genres" :key="i">{{ genre }}</li></ul></td>
+            <td class="text-left">{{ item.price }}</td>
+            <td class="text-left">
+              <v-btn @click="delete_book(item._id, i)" class="icon-delete pos-a d-none text-error ">
                 <v-icon icon="$delete"></v-icon>
               </v-btn>
               <v-btn class="icon-edit pos-a d-none text-primary ">
                 <v-icon icon="$edit"></v-icon>
               </v-btn>
             </td>
+          </tr>
+        </tbody>
+        <tbody v-if="books.length==0">
+          <tr>
+            <td colspan="4"><h3 class="mt-5 text-center">no books to display</h3></td>
           </tr>
         </tbody>
       </v-table>
@@ -100,7 +102,7 @@ export default {
 
       if (valid) {
         this.add_book()
-        location.reload()
+        // location.reload()
       }
     },
    async add_book() {
@@ -110,18 +112,18 @@ export default {
       author: this.add_data.author,
       genres: this.add_data.genres,
       price: this.add_data.price
-     })
-     this.newBook = data
+    })
+    this.newBook = data
     } catch (error) {
-      console.log(`------- ${error} -------`);
+    console.log(`------- ${error} -------`);
     }
+    this.books.push()
     },
-    delete_book(book_id){
+    delete_book(book_id, index){
       axios.delete(`http://localhost:5200/books/${book_id}`)
-      .then(response => console.log('book is deleted!'))
-      .then(location.reload())
+      .then(console.log('book is deleted!'))
+      .then(this.books.splice(index,1))
       .catch(err => {'error deleting a book', err})
-      // console.log(todo_id);
     }
   }
 }
