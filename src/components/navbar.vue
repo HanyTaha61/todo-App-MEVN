@@ -1,7 +1,7 @@
 <template>
-      <v-row justify="space-around" style="min-width: 700px;" no-gutters class="bg-dark border my-5 pa-5">
+      <v-row justify="space-around" style="min-width: 700px;" no-gutters class="border my-5 pa-5">
           <router-link
-          class="text-3 px-3 rounded"
+          class="text-3 px-3 py-1 rounded"
           v-for="link in links"
           :key="link"
           :to="link.url">{{ link.name }}</router-link>

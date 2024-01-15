@@ -19,7 +19,7 @@
       <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
         <div class="parent pos-a w-fit">
           <v-btn class="mark-read bg-success">edit<v-icon icon="$edit"></v-icon></v-btn>
-          <v-btn class="delete-todo mx-2 bg-error">delete<v-icon icon="$delete"></v-icon></v-btn>
+          <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id)">delete<v-icon icon="$delete"></v-icon></v-btn>
         </div>
         <v-card-item>
           <v-card-title>
@@ -92,6 +92,9 @@ export default {
       })
       this.newTodo = data
       this.$refs.form.reset()
+    },
+    delete_todo(x){
+      console.log(x);
     }
   },
 }

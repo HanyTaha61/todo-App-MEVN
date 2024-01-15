@@ -33,7 +33,7 @@
             <td class="text-center">{{ item.author }}</td>
             <td class="text-center">{{ item.price }}</td>
             <td class="text-center">
-              <v-btn class="icon-delete pos-a d-none text-error ">
+              <v-btn @click="delete_book(item._id)" class="icon-delete pos-a d-none text-error ">
                 <v-icon icon="$delete"></v-icon>
               </v-btn>
               <v-btn class="icon-edit pos-a d-none text-primary ">
@@ -105,6 +105,13 @@ export default {
     } catch (error) {
       console.log(`------- ${error} -------`);
     }
+    },
+    delete_book(book_id){
+      axios.delete(`http://localhost:5200/books/${book_id}`)
+      .then(response => console.log('book is deleted!'))
+      .then(location.reload())
+      .catch(err => {'error deleting a book', err})
+      // console.log(todo_id);
     }
   }
 }
