@@ -3,6 +3,8 @@
     <v-form ref="form" class="d-flex mb-4" method="post" action="/books">
       <v-text-field :rules="nameRules" counter="25" type="text" placeholder="book title" class="pa-1" v-model="add_data.title" />
       <v-text-field :rules="authorRules" counter="25" type="text" placeholder="author name" class="mx-1 pa-1" v-model="add_data.author" />
+      <!-- <v-text-field :rules="authorRules" counter="25" type="text" placeholder="genres" class="mx-1 pa-1" v-model="add_data.genres" /> -->
+      <v-select v-model="add_data.genres" multiple :items="['horror', 'fantasy', 'Sci-Fi', 'technology', 'physics']" label="genres" />
       <v-text-field :rules="priceRules" type="number" placeholder="book price" class="mx-1 pa-1" v-model="add_data.price" />
       <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add book</v-btn>
     </v-form>
@@ -20,6 +22,9 @@
               <strong>author</strong>
             </th>
             <th class="text-center text-h6">
+              <strong>genres</strong>
+            </th>
+            <th class="text-center text-h6">
               <strong>price</strong>
             </th>
             <th class="text-center text-h6">
@@ -31,6 +36,7 @@
           <tr class="table-row pos-r" v-for="item in books" :key="item.title">
             <td class="text-center">{{ item.title }}</td>
             <td class="text-center">{{ item.author }}</td>
+            <td class="text-center"><ul><li class="text-center" v-for="(genre,i) in item.genres" :key="i">{{ genre }}</li></ul></td>
             <td class="text-center">{{ item.price }}</td>
             <td class="text-center">
               <v-btn @click="delete_book(item._id)" class="icon-delete pos-a d-none text-error ">
@@ -54,12 +60,12 @@ export default {
   components:{},
   data() {
     return {
-      show: false,
       newBook:{},
       books: [],
       add_data: {
         title: '',
         author: '',
+        genres: null,
         price: null
       },
       nameRules: [
@@ -72,10 +78,13 @@ export default {
       v => (v && v.length <= 25) || 'author name must be less than 25 characters',
       v => (v && v.length >= 4) || 'author name must be more than 4 characters',
     ],
+    genresRules: [
+      v => !!v || 'genre is required'
+    ],
     priceRules: [
       v => !!v || 'book price is required',
       v => (v && v >= 1) || 'book price must be more than 1 USD',
-    ]
+    ],
     }
   },
   mounted() {
@@ -99,6 +108,7 @@ export default {
       const { data } = await axios.post('http://localhost:5200/books', {
       title: this.add_data.title,
       author: this.add_data.author,
+      genres: this.add_data.genres,
       price: this.add_data.price
      })
      this.newBook = data

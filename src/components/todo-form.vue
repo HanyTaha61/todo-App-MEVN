@@ -49,6 +49,7 @@ export default {
     title: '',
     duration: null,
     description: '',
+    priority: null,
     newTodo: {},
     titleRules: [
       v => !!v || 'title is required',
@@ -65,7 +66,6 @@ export default {
       // v => !!v || 'duration is required',
       v => (v && v >= 0) || 'duration must be more than 1 min',
     ],
-    priority: null,
   }),
   mounted() {
     axios.get('http://localhost:5200/')
