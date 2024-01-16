@@ -106,10 +106,24 @@ app.post('/books',(req,res)=>{
 
 // (3) DELETE routes
 //------------------
-
 app.delete('/books/:id', (req, res)=>{
     // if(ObjectId.isValid(req.params.id)){
         db.collection('books')
+        .deleteOne({_id: new ObjectId(req.params.id)})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            res.status(500).json({error: err + 'could not delete the doc'})
+        })
+    // }else{
+    //     res.status(500).json('not a valid doc id')
+    // }
+})
+
+app.delete('/:id', (req, res)=>{
+    // if(ObjectId.isValid(req.params.id)){
+        db.collection('todos')
         .deleteOne({_id: new ObjectId(req.params.id)})
         .then(result => {
             res.status(200).json(result)

@@ -78,8 +78,6 @@ export default {
   components: {},
   data() {
     return {
-      x: null,
-      show: false,
       newBook: {},
       books: [],
       add_data: {
@@ -120,7 +118,6 @@ export default {
 
       if (valid) {
         this.add_book()
-        // location.reload()
       }
     },
     async add_book() {
@@ -132,7 +129,6 @@ export default {
           price: this.add_data.price
         })
           .then(
-
             this.books.push({
               title: this.add_data.title,
               author: this.add_data.author,
@@ -140,20 +136,13 @@ export default {
               price: this.add_data.price
             })
           )
-          .then(
-
-            this.add_data.title = null,
-            this.add_data.author = null,
-            this.add_data.genres = null,
-            this.add_data.price = null
-          )
+          .then(this.$refs.form.reset())
         console.log('---- book is added ----');
       } catch (error) {
         console.log(`------- ${error} -------`);
       }
     },
     delete_book(book_id, arr, item) {
-
       axios.delete(`http://localhost:5200/books/${book_id}`)
         .then(console.log('book is deleted!'))
         .then(this.books.splice(arr.indexOf(item), 1))
@@ -189,9 +178,7 @@ export default {
 
 }
 
-.v-enter-from,
-.v-leave-to {
-  /* animation: new_row 0.5 reverse; */
+.v-enter-from, .v-leave-to {
   opacity: 0;
 }
 

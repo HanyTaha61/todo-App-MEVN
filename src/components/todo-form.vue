@@ -1,25 +1,27 @@
 <template>
-    <v-form ref="form" class="mb-5 pa-2">
-      <v-row>
-        <v-col>
-          <v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
-          <v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
-        </v-col>
-        <v-col>
-          <v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
-            required></v-text-field>
-          <v-select v-model="priority" :items="['Low', 'Medium', 'High']" :rules="[v => !!v || 'Priority is required']"
-            label="Priority" required />
-        </v-col>
-      </v-row>
-      <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add todo</v-btn>
-    </v-form>
-    <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
+  <v-form ref="form" class="mb-5 pa-2">
+    <v-row>
+      <v-col>
+        <v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
+        <v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
+          required></v-text-field>
+        <v-select v-model="priority" :items="['Low', 'Medium', 'High']" :rules="[v => !!v || 'Priority is required']"
+          label="Priority" required />
+      </v-col>
+    </v-row>
+    <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add todo</v-btn>
+  </v-form>
+  <h1 class="text-center"><strong class="text-decoration-underline">My Todo List</strong></h1>
+  <transition-group>
     <v-card v-for="(todo, index) in todos" :key="index" class="mx-auto my-3 w-75" hover>
       <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
         <div class="parent pos-a w-fit">
           <v-btn class="mark-read bg-success">edit<v-icon icon="$edit"></v-icon></v-btn>
-          <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id)">delete<v-icon icon="$delete"></v-icon></v-btn>
+          <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id,todos,todo)">delete<v-icon
+              icon="$delete"></v-icon></v-btn>
         </div>
         <v-card-item>
           <v-card-title>
@@ -37,6 +39,10 @@
         </v-card-text>
       </div>
     </v-card>
+  </transition-group>
+  <v-card class="mt-5" v-if="todos.length == 0">
+    <h1 class="text-center">no todos to display</h1>
+  </v-card>
 </template>
 
 <script>
@@ -80,21 +86,35 @@ export default {
 
       if (valid) {
         this.add_todo()
-        location.reload()
       }
     },
     async add_todo() {
-      const { data } = await axios.post('http://localhost:5200/', {
-        title: this.title,
-        duration: this.duration,
-        priority: this.priority,
-        description: this.description
-      })
-      this.newTodo = data
-      this.$refs.form.reset()
+      try {
+        await axios.post('http://localhost:5200/', {
+          title: this.title,
+          duration: this.duration,
+          priority: this.priority,
+          description: this.description
+        })
+          .then(
+            this.todos.push({
+              title: this.title,
+              duration: this.duration,
+              priority: this.priority,
+              description: this.description
+            })
+          )
+          .then(this.$refs.form.reset())
+        console.log('---- todo is added ----');
+      } catch (err) {
+        console.log(`------- ${err} -------`);
+      }
     },
-    delete_todo(x){
-      console.log(x);
+    delete_todo(todo_id, arr, item) {
+      axios.delete(`http://localhost:5200/${todo_id}`)
+        .then(console.log('todo is deleted!'))
+        .then(this.todos.splice(arr.indexOf(item), 1))
+        .catch(err => { 'error deleting a todo', err })
     }
   },
 }
@@ -102,6 +122,36 @@ export default {
 <style>
 body {
   height: 3000px;
+}
+
+@keyframes new_row {
+  0% {
+    transform: scale(0);
+  }
+
+  80% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.25s;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 .priority-low {
@@ -127,20 +177,20 @@ body {
   z-index: 1;
 }
 
-.main:hover .parent{
+.main:hover .parent {
   bottom: 30px;
 }
 
-.main:hover{
-  background-color: rgba(0,0,0,0.4) !important;
+.main:hover {
+  background-color: rgba(0, 0, 0, 0.4) !important;
 }
 
-.pos-a{
-  position: absolute !important; 
+.pos-a {
+  position: absolute !important;
 }
 
-.pos-r{
-  position: relative !important; 
+.pos-r {
+  position: relative !important;
 }
 
 .w-fit {
