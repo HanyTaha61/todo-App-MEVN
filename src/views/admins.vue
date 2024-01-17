@@ -113,10 +113,6 @@ export default {
 </script>
 
 <style scoped>
-.bg-dark {
-  background-color: beige !important;
-}
-
 .overlay {
   background-color: aliceblue !important;
 }

@@ -16,26 +16,38 @@
   </v-form>
   <h1 class="text-decoration-underline text-center"><strong>My Todo List</strong></h1>
   <transition-group>
-    <v-card v-for="(todo, index) in todos" :key="index" :class="`bg-${todo.priority.toLowerCase()}`" class="mx-auto my-3 w-75" hover>
+    <v-card v-for="(todo, index) in todos" :key="index" :class="`bg-${todo.priority.toLowerCase()}`"
+      class="mx-auto my-3 w-75" hover>
       <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
         <div class="parent pos-a">
-          <v-btn class="mark-read bg-success" @click="done = !done">done<v-icon icon="$check"></v-icon></v-btn>
+          <v-btn class="mark-read button_main done_text" :class="{ 'button-done': task_done }"
+            @click="mark_done(todos, index)">done<v-icon icon="$check"></v-icon></v-btn>
           <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id, todos, todo)">delete<v-icon
               icon="$delete"></v-icon></v-btn>
         </div>
         <v-card-item>
-          <v-card-title :class="{'todo-done': done}">
-            {{ todo.title }}
+          <v-card-title :class="{ 'todo-done': text_done }">
+            <h3>{{ todo.title }}</h3>
           </v-card-title>
+          <div>
+            <div v-if="task_done == true" class="done">
+              <strong>Status:</strong>
+              <span class="text-white px-1 mx-1 bg-success">Done</span>
+            </div>
+            <div v-if="task_done == false" class="undone">
+              <strong>Status:</strong>
+              <span class="text-white px-1 mx-1 bg-error">Undone</span>
+            </div>
+          </div>
           <v-card-subtitle>
-            Duration: {{ todo.duration }} minutes
+            <strong>Duration:</strong> {{ todo.duration }} minutes
           </v-card-subtitle>
           <v-card-subtitle>
-            priority: {{ todo.priority }}
+            <strong>priority:</strong> {{ todo.priority }}
           </v-card-subtitle>
         </v-card-item>
         <v-card-text>
-          Description: {{ todo.description }}
+          <strong>Description:</strong> {{ todo.description }}
         </v-card-text>
       </div>
     </v-card>
@@ -50,13 +62,15 @@ import axios from 'axios'
 
 export default {
   data: () => ({
-    done: false,
+    button_done_color: false,
+    text_done: false,
     all_todos: [],
     todos: [],
     title: '',
     duration: null,
     description: '',
     priority: null,
+    task_done: false,
     newTodo: {},
     titleRules: [
       v => !!v || 'title is required',
@@ -95,14 +109,16 @@ export default {
           title: this.title,
           duration: this.duration,
           priority: this.priority,
-          description: this.description
+          description: this.description,
+          status: this.task_done
         })
           .then(
             this.todos.push({
               title: this.title,
               duration: this.duration,
               priority: this.priority,
-              description: this.description
+              description: this.description,
+              status: this.task_done
             })
           )
           .then(this.$refs.form.reset())
@@ -117,7 +133,17 @@ export default {
         .then(this.todos.splice(arr.indexOf(item), 1))
         .catch(err => { 'error deleting a todo', err })
     },
-    mark_done() {
+    mark_done(arr, target) {
+      this.task_done = !this.task_done
+      if (this.task_done == false) {
+        this.text_done = false
+        document.getElementsByClassName('done_text').innerText = 'Undone'
+
+      } else {
+        this.text_done = true
+
+      }
+      this.button_done_color = !this.button_done_color
       console.log('todo is done -------');
     }
   },
@@ -126,20 +152,6 @@ export default {
 <style>
 body {
   height: 3000px;
-}
-
-@keyframes new_row {
-  0% {
-    transform: scale(0);
-  }
-
-  80% {
-    transform: scale(1.01);
-  }
-
-  100% {
-    transform: scale(1);
-  }
 }
 
 .v-enter-active,
@@ -164,15 +176,7 @@ body {
   background-color: rgba(255, 221, 0, 0.1) !important;
 }
 
-.bg-high{
-  background: rgba(232, 3, 3,0.15) !important;
-}
-.bg-medium{
-  background: rgba(255, 165, 0,0.3) !important;
-}
-.bg-low{
-  background: rgba(255, 221, 0,0.1) !important;
-}
+
 
 .priority-medium {
   border-right: 15px solid #ffa500;
@@ -199,31 +203,12 @@ body {
   bottom: -12px;
 }
 
-.pos-a {
-  position: absolute !important;
-}
-
-.pos-r {
-  position: relative !important;
-}
-
-.w-fit {
-  width: fit-content !important;
-}
-
-.w-100 {
-  width: 100% !important;
-}
-
-.w-75 {
-  width: 75% !important;
-}
-
-.w-50 {
-  width: 50% !important;
-}
-.todo-done{
+.todo-done {
   text-decoration: line-through;
-  color:grey
+  color: grey
+}
+
+.button-done {
+  background-color: grey !important;
 }
 </style>

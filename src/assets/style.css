@@ -1,0 +1,58 @@
+.bg-high {
+  background: rgba(232, 3, 3, 0.15) !important;
+}
+
+.bg-medium {
+  background: rgba(255, 165, 0, 0.3) !important;
+}
+
+.bg-low {
+  background: rgba(255, 221, 0, 0.1) !important;
+}
+
+.bg-dark {
+  background-color: beige !important;
+}
+
+.pos-a {
+  position: absolute !important;
+}
+
+.pos-r {
+  position: relative !important;
+}
+
+.w-fit {
+  width: fit-content !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.w-75 {
+  width: 75% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.button_main{
+    background-color: #4caf50 !important;
+    color: #fff !important;
+}
+/* animation */
+@keyframes flash {
+  0% {
+    transform: scale(0);
+  }
+
+  80% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

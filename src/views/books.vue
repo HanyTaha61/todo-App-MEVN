@@ -153,20 +153,6 @@ export default {
 </script>
 
 <style scoped>
-@keyframes new_row {
-  0% {
-    transform: scale(0);
-  }
-
-  80% {
-    transform: scale(1.01);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.25s;
@@ -178,12 +164,9 @@ export default {
 
 }
 
-.v-enter-from, .v-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
-}
-
-.bg-dark {
-  background-color: beige !important;
 }
 
 .overlay {
@@ -212,4 +195,5 @@ export default {
 .table-row:hover .icon-delete,
 .table-row:hover .icon-edit {
   display: block !important;
-}</style>
+}
+</style>
