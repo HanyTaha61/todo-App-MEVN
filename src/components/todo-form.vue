@@ -20,21 +20,21 @@
       class="mx-auto my-3 w-75" hover>
       <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
         <div class="parent pos-a">
-          <v-btn class="mark-read button_main done_text" :class="{ 'button-done': task_done }"
+          <v-btn class="button_main" :class="{ 'bg-grey': todo.status }"
             @click="mark_done(todos, index)">done<v-icon icon="$check"></v-icon></v-btn>
           <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id, todos, todo)">delete<v-icon
               icon="$delete"></v-icon></v-btn>
         </div>
         <v-card-item>
-          <v-card-title :class="{ 'todo-done': text_done }">
+          <v-card-title :class="{ 'todo-done': todo.status }">
             <h3>{{ todo.title }}</h3>
           </v-card-title>
           <div>
-            <div v-if="task_done == true" class="done">
+            <div v-if="todo.status" class="done">
               <strong>Status:</strong>
               <span class="text-white px-1 mx-1 bg-success">Done</span>
             </div>
-            <div v-if="task_done == false" class="undone">
+            <div v-if="!todo.status" class="undone">
               <strong>Status:</strong>
               <span class="text-white px-1 mx-1 bg-error">Undone</span>
             </div>
@@ -135,16 +135,9 @@ export default {
     },
     mark_done(arr, target) {
       this.task_done = !this.task_done
-      if (this.task_done == false) {
-        this.text_done = false
-        document.getElementsByClassName('done_text').innerText = 'Undone'
-
-      } else {
-        this.text_done = true
-
-      }
+      arr[target].status = !arr[target].status
       this.button_done_color = !this.button_done_color
-      console.log('todo is done -------');
+      // console.log('todo is done -------');
     }
   },
 }
@@ -208,7 +201,4 @@ body {
   color: grey
 }
 
-.button-done {
-  background-color: grey !important;
-}
 </style>
