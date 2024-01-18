@@ -14,41 +14,38 @@
     </v-row>
     <v-btn color="success" class="my-4 mx-auto d-block" @click="validate">add todo</v-btn>
   </v-form>
-  <h1 class="text-decoration-underline text-center"><strong>My Todo List</strong></h1>
+  <!-- <h1 class="text-decoration-underline text-center"><strong>My Todo List</strong></h1> -->
   <transition-group>
     <v-card v-for="(todo, index) in todos" :key="index" :class="`bg-${todo.priority.toLowerCase()}`"
       class="mx-auto my-3 w-75" hover>
-      <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
-        <div class="parent pos-a">
-          <v-btn class="button_main" :class="{ 'bg-grey': todo.status }"
-            @click="mark_done(todos, index)">done<v-icon icon="$check"></v-icon></v-btn>
-          <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id, todos, todo)">delete<v-icon
-              icon="$delete"></v-icon></v-btn>
-        </div>
-        <v-card-item>
-          <v-card-title :class="{ 'todo-done': todo.status }">
-            <h3>{{ todo.title }}</h3>
-          </v-card-title>
-          <div>
-            <div v-if="todo.status" class="done">
-              <strong>Status:</strong>
-              <span class="text-white px-1 mx-1 bg-success">Done</span>
-            </div>
-            <div v-if="!todo.status" class="undone">
-              <strong>Status:</strong>
-              <span class="text-white px-1 mx-1 bg-error">Undone</span>
-            </div>
+      <div :class="{ 'bg-grey': todo.status }">
+        <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
+          <div class="parent pos-a">
+            <v-btn class="button_main" :class="{ 'bg-grey': todo.status }" @click="mark_done(todo._id, todos, index)">done<v-icon
+                icon="$check"></v-icon></v-btn>
+            <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id, todos, todo)">delete<v-icon
+                icon="$delete"></v-icon></v-btn>
           </div>
-          <v-card-subtitle>
-            <strong>Duration:</strong> {{ todo.duration }} minutes
-          </v-card-subtitle>
-          <v-card-subtitle>
-            <strong>priority:</strong> {{ todo.priority }}
-          </v-card-subtitle>
-        </v-card-item>
-        <v-card-text>
-          <strong>Description:</strong> {{ todo.description }}
-        </v-card-text>
+          <v-card-item>
+            <v-card-title :class="{ 'todo-done': todo.status }">
+              <h3>{{ todo.title }}</h3>
+            </v-card-title>
+            <div>
+              <strong>Status:</strong>
+              <div v-if="todo.status" class="d-inline rounded w-fit text-white px-1 mx-1 bg-success">Done</div>
+              <div v-if="!todo.status" class="d-inline rounded w-fit text-white px-1 mx-1 bg-error">Undone</div>
+            </div>
+            <v-card-subtitle :class="{ 'todo-done': todo.status }">
+              <strong>Duration:</strong> {{ todo.duration }} minutes
+            </v-card-subtitle>
+            <v-card-subtitle :class="{ 'todo-done': todo.status }">
+              <strong>priority:</strong> {{ todo.priority }}
+            </v-card-subtitle>
+          </v-card-item>
+          <v-card-text :class="{ 'todo-done': todo.status }">
+            <strong>Description:</strong> {{ todo.description }}
+          </v-card-text>
+        </div>
       </div>
     </v-card>
   </transition-group>
@@ -127,17 +124,24 @@ export default {
         console.log(`------- ${err} -------`);
       }
     },
-    delete_todo(todo_id, arr, item) {
-      axios.delete(`http://localhost:5200/${todo_id}`)
+    async delete_todo(todo_id, arr, item) {
+      await axios.delete(`http://localhost:5200/${todo_id}`)
         .then(console.log('todo is deleted!'))
         .then(this.todos.splice(arr.indexOf(item), 1))
         .catch(err => { 'error deleting a todo', err })
     },
-    mark_done(arr, target) {
-      this.task_done = !this.task_done
-      arr[target].status = !arr[target].status
-      this.button_done_color = !this.button_done_color
-      // console.log('todo is done -------');
+    async mark_done(id, arr, target) {
+      // this.task_done = !this.task_done
+      await axios.put(`http://localhost:5200/${id}`, {
+        status: arr[target].status
+      })
+      .then(
+        arr[target].status = !arr[target].status,
+        this.button_done_color = !this.button_done_color,
+        // console.log('todo is updated in the front end -------')
+      )
+        // .then(response => console.log(response.data))
+        .catch(err => console.log(err))
     }
   },
 }
@@ -200,5 +204,4 @@ body {
   text-decoration: line-through;
   color: grey
 }
-
 </style>
