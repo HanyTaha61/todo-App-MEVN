@@ -21,8 +21,8 @@
       <div :class="{ 'bg-grey': todo.status }">
         <div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
           <div class="parent pos-a">
-            <v-btn class="button_main" :class="{ 'bg-grey': todo.status }" @click="mark_done(todo._id, todos, index)">done<v-icon
-                icon="$check"></v-icon></v-btn>
+            <v-btn :loading="loading" class="button_main" :class="{ 'bg-grey': todo.status }"
+              @click="mark_done(todo._id, todos, index)">done<v-icon icon="$check"></v-icon></v-btn>
             <v-btn class="delete-todo mx-2 bg-error" @click="delete_todo(todo._id, todos, todo)">delete<v-icon
                 icon="$delete"></v-icon></v-btn>
           </div>
@@ -59,6 +59,7 @@ import axios from 'axios'
 
 export default {
   data: () => ({
+    loading: false,
     button_done_color: false,
     text_done: false,
     all_todos: [],
@@ -131,17 +132,16 @@ export default {
         .catch(err => { 'error deleting a todo', err })
     },
     async mark_done(id, arr, target) {
-      // this.task_done = !this.task_done
+      this.loading = true
       await axios.put(`http://localhost:5200/${id}`, {
         status: arr[target].status
       })
-      .then(
-        arr[target].status = !arr[target].status,
-        this.button_done_color = !this.button_done_color,
-        // console.log('todo is updated in the front end -------')
-      )
-        // .then(response => console.log(response.data))
+        .then(
+          arr[target].status = !arr[target].status,
+          this.button_done_color = !this.button_done_color,
+        )
         .catch(err => console.log(err))
+        .finally(() => this.loading = false)
     }
   },
 }
