@@ -18,7 +18,7 @@
 			@click="validate">add todo</v-btn>
 	</v-form>
 	<transition-group>
-		<v-card v-for="(todo, index) in todos" :key="index" :class="`bg-${todo.priority.toLowerCase()}`"
+		<v-card v-for="(todo, index) in fetched_todos" :key="index" :class="`bg-${todo.priority.toLowerCase()}`"
 			class="mx-auto my-3 w-75" hover>
 			<div :class="{ 'bg-grey': todo.status }">
 				<div class="main pos-r" :class="`priority-${todo.priority.toLowerCase()}`">
@@ -70,6 +70,7 @@ export default {
 		button_done_color: false,
 		text_done: false,
 		all_todos: [],
+		fetched_todos:[],
 		todos: [],
 		title: '',
 		duration: null,
@@ -93,10 +94,11 @@ export default {
 			v => (v && v >= 0) || 'duration must be more than 1 min',
 		],
 	}),
-	async mounted() {
-		await axios.get('http://localhost:5200/')
-			.then(data => {
-				this.todos = data.data.all_todos
+	mounted() {
+		let fetched_todos = []
+		axios.get('http://localhost:5200/')
+			.then(response => {
+				fetched_todos.push(response.data.all_todos)
 			})
 			.catch(err => console.log(err.message + '-----'))
 	},
@@ -106,7 +108,6 @@ export default {
 
 			if (valid) {
 				this.add_todo()
-				// location.reload()
 			}
 		},
 		add_todo() {
@@ -119,7 +120,7 @@ export default {
 				status: this.task_done
 			})
 				.then(result => {
-					this.todos.push({
+					this.fetched_todos.push({
 						_id: result.data.insertedId,
 						title: this.title,
 						duration: this.duration,
