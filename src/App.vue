@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="">
-    <navBar />
+    <!-- <navBar /> -->
     <RouterView />
   </v-container>
 </template>
