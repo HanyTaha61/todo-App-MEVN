@@ -77,6 +77,7 @@ export default {
 		priority: null,
 		task_done: false,
 		newTodo: {},
+		online: false,
 		titleRules: [
 			v => !!v || 'title is required',
 			v => (v && v.length <= 25) || 'title must be less than 25 characters',
@@ -103,12 +104,18 @@ export default {
 	methods: {
 		async validate() {
 			const { valid } = await this.$refs.form.validate()
-
-			if (valid) {
-				this.add_todo()
-				// location.reload()
+			window.navigator.onLine ? this.online = true : this.online = false
+			if (this.online == false) {
+				alert('please check your internet connection')
+			} else {
+				if (valid && this.online == true) {
+					this.add_todo()
+				}
 			}
+
 		},
+
+		// ========   Add a todo ==========
 		add_todo() {
 			this.loading_add = true
 			axios.post('http://localhost:5200/', {
@@ -129,11 +136,15 @@ export default {
 					});
 					(result.status == 201) ? this.loading_add = false : this.loading_add = true
 				})
-				.catch(error => console.log(error))
+				.catch(error => {
+					console.log(error.message);
+				})
 				.then(() => {
 					this.$refs.form.reset()
 				})
 		},
+
+		// ========   Delete a todo ==========
 		async delete_todo(todo_id, arr, item) {
 			this.loading_delete = true
 			await axios.delete(`http://localhost:5200/${todo_id}`)
@@ -144,6 +155,8 @@ export default {
 				)
 				.catch(err => { 'error deleting a todo', err })
 		},
+
+		// ========   Mark a todo as done ==========
 		async mark_done(id, arr, target) {
 			this.loading_done = true
 			await axios.put(`http://localhost:5200/${id}`, {
