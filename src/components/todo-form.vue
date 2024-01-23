@@ -1,15 +1,17 @@
 <template>
+	<h1 class="text-center mb-5">todo App</h1>
 	<v-form ref="form" class="mb-5 pa-2">
 		<v-row>
 			<v-col>
 				<v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
-				<v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
+				<v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)"
+					required></v-text-field>
 			</v-col>
 			<v-col>
 				<v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
 					required></v-text-field>
-				<v-select v-model="priority" :items="['Low', 'Medium', 'High']" :rules="[v => !!v || 'Priority is required']"
-					label="Priority" required />
+				<v-select v-model="priority" :items="['Low', 'Medium', 'High']"
+					:rules="[v => !!v || 'Priority is required']" label="Priority" required />
 			</v-col>
 		</v-row>
 		<v-btn :disabled="loading_add" :loading="loading_add" color="success" class="my-4 mx-auto d-block"
@@ -75,6 +77,7 @@ export default {
 		priority: null,
 		task_done: false,
 		newTodo: {},
+		online: false,
 		titleRules: [
 			v => !!v || 'title is required',
 			v => (v && v.length <= 25) || 'title must be less than 25 characters',
@@ -93,61 +96,75 @@ export default {
 	}),
 	mounted() {
 		axios.get('http://localhost:5200/')
-			.then(data => {
-				this.todos = data.data.all_todos
+			.then(resp => {
+				this.todos = resp.data
 			})
 			.catch(err => console.log(err.message + '-----'))
 	},
 	methods: {
 		async validate() {
-			const { valid } = await this.$refs.form.validate()
-
-			if (valid) {
-				this.add_todo()
+			if (window.navigator.onLine) {
+				const { valid } = await this.$refs.form.validate()
+				if (valid) {
+					this.add_todo()
+					alert('function add todo is running')
+				}
+			} else {
+				alert('please check your internet connection')
 			}
 		},
-		async add_todo() {
+
+		// ========   Add a todo ==========
+		add_todo() {
 			this.loading_add = true
-			await axios.post('http://localhost:5200/', {
+			axios.post('http://localhost:5200/', {
 				title: this.title,
 				duration: this.duration,
 				priority: this.priority,
 				description: this.description,
 				status: this.task_done
 			})
-				.then(
+				.then(result => {
 					this.todos.push({
+						_id: result.data.insertedId,
 						title: this.title,
 						duration: this.duration,
 						priority: this.priority,
 						description: this.description,
 						status: this.task_done
-					})
-				)
-				.then(this.$refs.form.reset())
-				.catch(error => log.error(error))
-				.finally(() => this.loading_add = false)
+					});
+					(result.status == 201) ? this.loading_add = false : this.loading_add = true
+				})
+				.catch(error => {
+					console.log(error.message);
+				})
+				.then(() => {
+					this.$refs.form.reset()
+				})
 		},
+
+		// ========   Delete a todo ==========
 		async delete_todo(todo_id, arr, item) {
 			this.loading_delete = true
 			await axios.delete(`http://localhost:5200/${todo_id}`)
 				.then(response => {
-					this.todos.splice(arr.indexOf(item), 1)
-					response.status == 200 ? this.loading_delete = false : this.loading_delete = true
-					console.log(`response: ${response.status}`)
+					this.todos.splice(arr.indexOf(item), 1),
+						(response.status == 200 || response.status == 201) ? this.loading_delete = false : this.loading_delete = true
 				}
 				)
 				.catch(err => { 'error deleting a todo', err })
 		},
+
+		// ========   Mark a todo as done ==========
 		async mark_done(id, arr, target) {
 			this.loading_done = true
 			await axios.put(`http://localhost:5200/${id}`, {
 				status: arr[target].status,
 			})
 				.then(response => {
-					arr[target].status = !arr[target].status
-					this.button_done_color = !this.button_done_color
-					response.status == 200 ? this.loading_done = false : this.loading_done = true
+					arr[target].status = !arr[target].status,
+						this.button_done_color = !this.button_done_color,
+						(response.status == 200 || response.status == 201) ? this.loading_done = false : this.loading_done = true
 				}
 				)
 				.catch(err => console.log(err))
