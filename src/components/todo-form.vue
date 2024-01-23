@@ -4,14 +4,13 @@
 		<v-row>
 			<v-col>
 				<v-text-field v-model="title" :counter="25" :rules="titleRules" label="Todo Title" required></v-text-field>
-				<v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)"
-					required></v-text-field>
+				<v-text-field v-model.number="duration" :rules="durationRules" label="Duration (mins)" required></v-text-field>
 			</v-col>
 			<v-col>
 				<v-text-field v-model="description" :counter="50" :rules="descriptionRules" label="Description"
 					required></v-text-field>
-				<v-select v-model="priority" :items="['Low', 'Medium', 'High']"
-					:rules="[v => !!v || 'Priority is required']" label="Priority" required />
+				<v-select v-model="priority" :items="['Low', 'Medium', 'High']" :rules="[v => !!v || 'Priority is required']"
+					label="Priority" required />
 			</v-col>
 		</v-row>
 		<v-btn :disabled="loading_add" :loading="loading_add" color="success" class="my-4 mx-auto d-block"
@@ -93,10 +92,10 @@ export default {
 			v => (v && v >= 0) || 'duration must be more than 1 min',
 		],
 	}),
-	async mounted() {
-		await axios.get('http://localhost:5200/')
-			.then(data => {
-				this.todos = data.data.all_todos
+	mounted() {
+		axios.get('http://localhost:5200/')
+			.then(resp => {
+				this.todos = resp.data
 			})
 			.catch(err => console.log(err.message + '-----'))
 	},
@@ -130,9 +129,10 @@ export default {
 				})
 				// .then(res => {
 				// 	(res.status == 201) ? this.loading_add = false : this.loading_add = true
-
+					.then(() =>{
+						this.$refs.form.reset()
+					})
 				// })
-				.then(this.$refs.form.reset())
 				.catch(error => console.log(error))
 		},
 		async delete_todo(todo_id, arr, item) {

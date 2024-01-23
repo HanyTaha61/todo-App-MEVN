@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
       all_todos.push(todo);
     })
     .then(() => {
-      res.send({ all_todos });
+      res.send(all_todos);
     })
     .catch((err) => {
       console.log(`-----Error----- ${err}`);
