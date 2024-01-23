@@ -105,12 +105,25 @@ export default {
 		async validate() {
 			const { valid } = await this.$refs.form.validate()
 			window.navigator.onLine ? this.online = true : this.online = false
-			if (this.online == false) {
-				alert('please check your internet connection')
-			} else {
-				if (valid && this.online == true) {
+
+			// check if the database is local
+			if (process.env.localURI) {
+				if (valid) {
 					this.add_todo()
 				}
+			}
+
+			// check if the database is online
+			else if (process.env.URI) {
+
+				// check if there is internet connection issues
+				if (this.online == false) {
+					alert('please check your internet connection')
+				}
+				else if (valid && this.online == true) {
+					this.add_todo()
+				}
+
 			}
 
 		},
