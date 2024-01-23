@@ -4,8 +4,8 @@ let  dbConnection
 
 module.exports = {
     connectToDB:(cb)=>{
-        // MongoClient.connect(process.env.URI)
-        MongoClient.connect(process.env.localURI)
+        MongoClient.connect(process.env.URI)
+        // MongoClient.connect(process.env.localURI)
         .then(client =>{
             dbConnection = client.db()
             return cb()

@@ -103,29 +103,15 @@ export default {
 	},
 	methods: {
 		async validate() {
-			const { valid } = await this.$refs.form.validate()
-			window.navigator.onLine ? this.online = true : this.online = false
-
-			// check if the database is local
-			if (process.env.localURI) {
+			if (window.navigator.onLine) {
+				const { valid } = await this.$refs.form.validate()
 				if (valid) {
 					this.add_todo()
+					alert('function add todo is running')
 				}
+			} else {
+				alert('please check your internet connection')
 			}
-
-			// check if the database is online
-			else if (process.env.URI) {
-
-				// check if there is internet connection issues
-				if (this.online == false) {
-					alert('please check your internet connection')
-				}
-				else if (valid && this.online == true) {
-					this.add_todo()
-				}
-
-			}
-
 		},
 
 		// ========   Add a todo ==========
