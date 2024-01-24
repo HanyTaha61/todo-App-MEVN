@@ -103,21 +103,22 @@ export default {
 	},
 	methods: {
 		async validate() {
-			if (window.navigator.onLine) {
-				const { valid } = await this.$refs.form.validate()
-				if (valid) {
-					this.add_todo()
-					alert('function add todo is running')
-				}
-			} else {
-				alert('please check your internet connection')
+			// if (window.navigator.onLine) {
+			const { valid } = await this.$refs.form.validate()
+			if (valid) {
+				this.add_todo()
+				alert('function add todo is running')
 			}
+			// } 
+			// else {
+			// 	alert('please check your internet connection')
+			// }
 		},
 
 		// ========   Add a todo ==========
 		add_todo() {
 			this.loading_add = true
-			axios.post('http://localhost:5200/', {
+			axios.post('http://localhost:5200/todos', {
 				title: this.title,
 				duration: this.duration,
 				priority: this.priority,
@@ -146,7 +147,7 @@ export default {
 		// ========   Delete a todo ==========
 		async delete_todo(todo_id, arr, item) {
 			this.loading_delete = true
-			await axios.delete(`http://localhost:5200/${todo_id}`)
+			await axios.delete(`http://localhost:5200/todos/${todo_id}`)
 				.then(response => {
 					this.todos.splice(arr.indexOf(item), 1),
 						(response.status == 200 || response.status == 201) ? this.loading_delete = false : this.loading_delete = true
@@ -158,7 +159,7 @@ export default {
 		// ========   Mark a todo as done ==========
 		async mark_done(id, arr, target) {
 			this.loading_done = true
-			await axios.put(`http://localhost:5200/${id}`, {
+			await axios.put(`http://localhost:5200/todos/${id}`, {
 				status: arr[target].status,
 			})
 				.then(response => {
@@ -169,7 +170,7 @@ export default {
 				)
 				.catch(err => console.log(err))
 		}
-	},
+	}
 }
 </script>
 <style>

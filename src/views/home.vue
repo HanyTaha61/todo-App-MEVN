@@ -1,7 +1,6 @@
 <template>
     <div class="text-h2 text-capitalize text-center pa-3">todo guru</div>
 
-
     <!-- signup form -->
     <!----------------->
 
@@ -54,7 +53,9 @@ import axios from 'axios'
 export default {
     data: () => ({
         signup: true,
+        isLoggedIn: false,
         username: '',
+        registeredUsername: '',
         login_email: undefined,
         signup_email: undefined,
         isValid: false,
@@ -83,24 +84,29 @@ export default {
             }
             // } 
             // else {
-                // 	alert('please check your internet connection')
-                // }
-            },
+            // 	alert('please check your internet connection')
+            // }
+        },
         signUp() {
-            axios.post("http://localhost:5200/users",{
+            axios.post("http://localhost:5200/users", {
                 username: this.username,
                 email: this.signup_email,
                 password: this.signup_password
             })
-            .then(response => alert("user with id# " + response.data.insertedId + " was added to the database successfully")
-            )
-            .then(() => {
-					this.$refs.form.reset()
-				})
+                .then(response => {
+                    if (response.status == 200) {
+                        alert("email: " + response.data.email + " already exists in the database, try another email")
+                    } else if (response.status == 201){
+                        alert("email: " + this.signup_email + " was added to the database successfully")
+                        this.isLoggedIn = true
+                        this.registeredUsername = this.username
+                    }
+                })
+                .then(()=>this.$refs.form.reset())
         },
-        logIn(){
+        logIn() {
             alert('function login is running')
-            
+
         }
     }
 }
@@ -109,4 +115,5 @@ export default {
 <style>
 .cursor-pointer {
     cursor: pointer !important;
-}</style>
+}
+</style>

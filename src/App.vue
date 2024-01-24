@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="">
+  <v-container>
     <!-- <navBar /> -->
     <RouterView />
   </v-container>

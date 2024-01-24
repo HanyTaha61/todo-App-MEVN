@@ -32,7 +32,7 @@ connectToDB((err) => {
 
 // (1) GET routes
 //----------------
-app.get("/", (req, res) => {
+app.get("/todos", (req, res) => {
   const all_todos = [];
 
   db.collection("todos")
@@ -42,6 +42,22 @@ app.get("/", (req, res) => {
     })
     .then(() => {
       res.send(all_todos);
+    })
+    .catch((err) => {
+      console.log(`-----Error----- ${err}`);
+    });
+});
+
+app.get("/users", (req, res) => {
+  const all_users = [];
+
+  db.collection("users")
+    .find() // if sort is needed, use .sort({name: 1})
+    .forEach((todo) => {
+      all_users.push(todo);
+    })
+    .then(() => {
+      res.send(all_users);
     })
     .catch((err) => {
       console.log(`-----Error----- ${err}`);
@@ -93,7 +109,7 @@ app.get("/books/:id", (req, res) => {
 
 // (2) POST routes
 //----------------
-app.post("/", (req, res) => {
+app.post("/todos", (req, res) => {
   const new_todo = req.body;
   db.collection("todos")
     .insertOne(new_todo)
@@ -102,6 +118,25 @@ app.post("/", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: err + "00000" });
+    });
+});
+app.post("/users", (req, res) => {
+  const new_user = req.body;
+  db.collection("users")
+    .findOne({ email: new_user.email })
+    .then((result) => {
+      if (result == null) { // check for unique user email
+        db.collection("users")
+          .insertOne(new_user)
+          .then((result) => {
+            res.status(201).json(result);
+          })
+          .catch((err) => {
+            res.status(500).json({ error: err + "00000" });
+          });
+      } else {
+        res.status(200).json(result);
+      }
     });
 });
 
@@ -142,7 +177,7 @@ app.delete("/books/:id", (req, res) => {
     });
 });
 
-app.delete("/:id", (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   db.collection("todos")
     .deleteOne({ _id: new ObjectId(req.params.id) })
     .then((result) => {
@@ -155,11 +190,14 @@ app.delete("/:id", (req, res) => {
 
 // (4) PUT routes
 //---------------
-app.put("/:id", (req, res) => {
+app.put("/todos/:id", (req, res) => {
   const id = req.params.id;
-//   const todo = { status: !req.body.status };
+  //   const todo = { status: !req.body.status };
   db.collection("todos")
-    .updateOne({ _id: new ObjectId(id) }, { $set: {status: !req.body.status} })
+    .updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { status: !req.body.status } }
+    )
     .then((result) => res.status(200).json(result))
     .then(console.log("todos updated in the backend ------"))
     .catch((err) => {
